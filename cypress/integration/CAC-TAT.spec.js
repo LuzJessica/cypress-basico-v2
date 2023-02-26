@@ -11,15 +11,14 @@ describe('Central de Atendimento ao Cliente TAT', function() { //test suit
         cy.get('input[name="lastName"]').type('Luz');
         cy.get('input[type="email"]').type('jessicaluz@gec.inatel.br');
         cy.get('textarea[name="open-text-area"]').type('Meu primeiro teste de escrita com Cypress');
-      //  cy.get('button[type="submit"]').click();
-        cy.contains('button','Enviar');
+        cy.contains('button','Enviar').click();
     })
     it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', function() { //extra 2
         cy.get('input[name="firstName"]').type('Jéssica');
         cy.get('input[name="lastName"]').type('Luz');
         cy.get('input[type="email"]').type('jessicaluz');
         cy.get('textarea[name="open-text-area"]').type('Meu primeiro teste de escrita com Cypress');
-        cy.get('button[type="submit"]').click();
+        cy.contains('button','Enviar').click();
         cy.get('.error').should('be.visible');
     })
     it('verifica que o campo telefone só aceita números', function() { //extra 3
@@ -29,9 +28,9 @@ describe('Central de Atendimento ao Cliente TAT', function() { //test suit
         cy.get('input[name="firstName"]').type('Jéssica');
         cy.get('input[name="lastName"]').type('Luz');
         cy.get('input[type="email"]').type('jessicaluz@gec.inatel.br');
-        cy.get('input[id="phone-checkbox"]').click();
+        cy.get('input[id="phone-checkbox"]').check();
         cy.get('textarea[name="open-text-area"]').type('Meu primeiro teste de escrita com Cypress');
-        cy.get('button[type="submit"]').click();
+        cy.contains('button','Enviar').click();
         cy.get('.error').should('be.visible');
     })
     it('limpa nome, sobrenome, email e telefone', function() { //extra 5
@@ -45,12 +44,34 @@ describe('Central de Atendimento ao Cliente TAT', function() { //test suit
         cy.get('input[id="phone"]').clear().should('have.value', '');
     })
     it('exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', function() { //extra 6
-        cy.get('button[type="submit"]').click();
+        cy.contains('button','Enviar').click();
         cy.get('.error').should('be.visible');
     })
     it('envia o formuário com sucesso usando um comando customizado', function() { //extra 7
         cy.fillMandatoryFieldsAndSubmit();
         cy.get('.success').should('be.visible');
+    })
+    it('seleciona um produto (YouTube) por seu texto', function() { //Aula 18 Ex1
+        cy.get('select').select('YouTube');
+    })
+    it('seleciona um produto (Mentoria) por seu valor (value)', function() { //extra 1
+        cy.get('select').select('mentoria');
+    })
+    it('seleciona um produto (Blog) por seu índice', function() { //extra 1
+        cy.get('select').select(1);
+    })
+    it('marca o tipo de atendimento "Feedback"', function() { //Aula 22 Ex1
+        cy.get('input[type="radio"][value="feedback"]').check();
+    })
+    it('marca cada tipo de atendimento', function() { //Aula 22 Ex1
+        cy.get('input[type="radio"]').should('have.length',3).each(function($radio){
+            cy.wrap($radio).check();
+            cy.wrap($radio).should('be.checked');   
+        });
+    })
+    it('marca ambos checkboxes, depois desmarca o último', function() { //Aula 25 Ex1
+        cy.get('input[type="checkbox"]').check();
+        cy.get('input[type="checkbox"]').last().uncheck();
     })
   })
   
