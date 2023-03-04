@@ -73,5 +73,37 @@ describe('Central de Atendimento ao Cliente TAT', function() { //test suit
         cy.get('input[type="checkbox"]').check();
         cy.get('input[type="checkbox"]').last().uncheck();
     })
+    it('seleciona um arquivo da pasta fixtures', function() { //Aula 28 Ex1
+        cy.get('input[type="file"]').should('not.have.value').selectFile('cypress/fixtures/example.json')
+        .should(function($input){
+            expect($input[0].files[0].name).to.equal('example.json')
+        });
+    })
+    it('seleciona um arquivo simulando um drag-and-drop', function() { //extra 1
+        cy.get('input[type="file"]').should('not.have.value').selectFile('cypress/fixtures/example.json',{ action: 'drag-drop'})
+        .should(function($input){
+            expect($input[0].files[0].name).to.equal('example.json')
+        });
+    })
+    it('seleciona um arquivo utilizando uma fixture para a qual foi dada um alias', function() { //extra 1
+        cy.fixture('example.json').as('sampleFile');
+        cy.get('input[type="file"]').selectFile('@sampleFile').should(function($input){
+            expect($input[0].files[0].name).to.equal('example.json')
+        });;
+    })
+    it('verifica que a política de privacidade abre em outra aba sem a necessidade de um clique', function() { //Aula 32 ex1
+        cy.get('#privacy a').should('have.attr', 'target', '_blank');
+    })
+    it('acessa a página da política de privacidade removendo o target e então clicando no link', function() {//extra 1
+        cy.get('#privacy a').invoke('removeAttr', 'target').click();
+        cy.contains('Talking About Testing').should('be.visible');
+    })
+    it('testa a página da política de privacidade de forma independente', function() {//extra 1
+        cy.get('#privacy a').invoke('removeAttr', 'target').click();
+        cy.contains('#title', 'CAC TAT - Política de privacidade');
+        cy.contains('#white-background','Não salvamos dados submetidos no formulário da aplicação CAC TAT. Utilzamos as tecnologias HTML, CSS e JavaScript, para simular uma aplicação real. No entanto, a aplicação é um exemplo, sem qualquer persistência de dados, e usada para fins de ensino. Talking About Testing')
+        
+    })
+
   })
   
